@@ -6,17 +6,37 @@ namespace Task_5._6
     {
         static void Main(string[] args)
         {
-            
+
             var User = Anketa();
 
-            Console.WriteLine("Вас зовут: {0} {1}", User.Name, User.LastName);
-            Console.WriteLine("Ваш возраст: {0}", User.Age);
+            Print(User);
 
-            
-
-            static (string Name, string LastName, int Age) Anketa()
+            //Вывод на экран
+            static void Print((string Name, string LastName, int Age, string[] Pet, string[] Colors) User)
             {
-                (string Name, string LastName, int Age) User;
+                Console.Clear();
+                Console.WriteLine("Вас зовут: {0} {1}\nВаш возраст: {2}", User.Name, User.LastName, User.Age);
+
+                if (User.Pet.Length > 0)
+                {
+                    Console.WriteLine("Клички ваших животных:");
+                    for (int i = 0; i < User.Pet.Length; i++)
+                    {
+                        Console.WriteLine(User.Pet[i]);
+                    }
+                }
+                Console.WriteLine("Ваши любимые цвета:");
+                for (int i = 0; i < User.Colors.Length; i++)
+                {
+                    Console.WriteLine(User.Colors[i]);
+                }
+
+            }
+
+            // Ввод данных с клавиатуры
+            static (string Name, string LastName, int Age, string[] Pet, string[] Colors) Anketa()
+            {
+                (string Name, string LastName, int Age, string[] Pet, string[] Colors) User;
 
                 Console.WriteLine("Введите ваше имя: ");
                 User.Name = Console.ReadLine();
@@ -24,35 +44,65 @@ namespace Task_5._6
                 Console.WriteLine("Введите вашу фамилию: ");
                 User.LastName = Console.ReadLine();
 
-                Console.WriteLine("Введите ваше возраст: ");
-                User.Age = int.Parse(Console.ReadLine());
+                string age;
+                int intage;
+                do
+                {
+                    Console.WriteLine("Введите ваше возраст: ");
+                    age = Console.ReadLine();
+                } while (ChekNum(age, out intage));
+                User.Age = intage;
 
-                //Питомцы
+                //Питомцы 
 
                 Console.WriteLine("Есть ли у вас домашние питомцы? ");
                 string Animals = Console.ReadLine();
-
+                User.Pet = new string[0];
                 if ((Animals == "Да") || (Animals == "да"))
                 {
                     Console.WriteLine("Сколько у вас домашних питомце? ");
                     int num = int.Parse(Console.ReadLine());
 
-                    HousePet(num);
+                    User.Pet = HousePet(num);
 
                 }
 
-                //Цвета
+                //Цвета 
 
-                Console.WriteLine("Введите количество любимых цветов ");
-                int NumColors = int.Parse(Console.ReadLine());
+                int numcolor = 0;
 
-                if (NumColors > 0)
+                do
                 {
-                    Colors(NumColors);
+                    Console.WriteLine("Введите количество любимых цветов ");
+
+                } while (ChekNum(Console.ReadLine(), out numcolor));
+                User.Colors = new string[0];
+                if (numcolor > 0)
+                {
+                    User.Colors = Colors(numcolor);
                 }
+
+
                 return User;
             }
 
+            //Проверка на числа
+            static bool ChekNum(string number, out int corrnumber)
+            {
+                if (int.TryParse(number, out int intnum))
+                {
+                    if (intnum > 0 && intnum < 120)
+                    {
+                        corrnumber = intnum;
+                        return false;
+                    }
+
+                }
+                corrnumber = 0;
+                return true;
+            }
+
+            //Ввод питомцев
             static string[] HousePet(int num)
             {
                 string[] Pet = new string[num];
@@ -67,6 +117,7 @@ namespace Task_5._6
                 return Pet;
             }
 
+            //Ввод цветов
             static string[] Colors(int NumColors)
             {
                 string[] FavColors = new string[NumColors];
@@ -81,7 +132,7 @@ namespace Task_5._6
                 return FavColors;
             }
 
-           
+
         }
     }
 }
